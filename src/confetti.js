@@ -1,6 +1,12 @@
 /* globals Map */
 
-(function main(global, module, isWorker, workerSize) {
+var getContainer = (function () {
+  var root = document.getElementById("youmind-content-root");
+  if (root && root.shadowRoot) {
+    return root.shadowRoot.querySelector(".youmind-body");
+  }
+  return document.body;
+})(function main(global, module, isWorker, workerSize) {
   var canUseWorker = !!(
     global.Worker &&
     global.Blob &&
@@ -691,7 +697,7 @@
       } else if (isLibCanvas && !canvas) {
         // create and initialize a new canvas
         canvas = getCanvas(zIndex);
-        document.body.appendChild(canvas);
+        getContainer().appendChild(canvas);
       }
 
       if (allowResize && !initialized) {
@@ -750,8 +756,8 @@
         }
 
         if (isLibCanvas && canvas) {
-          if (document.body.contains(canvas)) {
-            document.body.removeChild(canvas);
+          if (getContainer().contains(canvas)) {
+            getContainer().removeChild(canvas);
           }
           canvas = null;
           initialized = false;
